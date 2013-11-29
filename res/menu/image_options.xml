@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/contrast"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/change_contrast"/>
+    
+    <item
+        android:id="@+id/Identify_item"
+        android:orderInCategory="2"
+        android:showAsAction="never"
+        android:title="@string/identify_character"/>
+    
+    <item
+        android:id="@+id/Process"
+        android:orderInCategory="3"
+        android:showAsAction="never"
+        android:title="@string/process_image"/>
+    
+    
+    
+
+</menu>

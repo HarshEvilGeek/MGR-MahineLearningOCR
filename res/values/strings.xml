@@ -5,5 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="image_capture_button">Capture New Image</string>
     <string name="process_existing_image_button">Process an Image</string>
+    <string name="process_image">Process Image</string>
+    <string name="change_contrast">Change Contrast</string>
+    <string name="identify_character">Identify Character</string>
 
 </resources>
