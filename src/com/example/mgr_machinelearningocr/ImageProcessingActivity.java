@@ -60,15 +60,14 @@ public class ImageProcessingActivity extends Activity {
 				x = (x * imageBitmap.getWidth()) / width;
 				y = (y * imageBitmap.getHeight()) / height;
 				//int pixel = imageBitmap.getPixel(x, y);
-				
-				//here we call process method but just to test, change the color of the pixel for now
-				for(int i=y;i<y+100;i++){
-					for(int j=x;j<x+100 ;j++){
-						imageBitmap.setPixel(j, i, Color.RED);
-						
+				/*
+				for (int i = x-50 ; i < x+ 50; i++) {
+					for (int j = y-50 ; j < y+50; j++) {
+						imageBitmap.setPixel(i, j, Color.RED);
 					}
-				}
-				imageView.setImageBitmap(imageBitmap);
+				}*/
+				//here we call process method but just to test, change the color of the pixel for now
+				identify(x, y);
 				return false;
 			}
 		});
@@ -88,9 +87,6 @@ public class ImageProcessingActivity extends Activity {
         case R.id.contrast:
          contrast();
           break;
-        case R.id.Identify_item:
-            identify();
-          break;
         case R.id.Process:
          process();
 
@@ -105,18 +101,18 @@ public class ImageProcessingActivity extends Activity {
 	private void contrast() {
 		Toast.makeText(this, "in contrast", Toast.LENGTH_SHORT)
         .show();
-		for (int i = 0; i < imageBitmap.getHeight(); i++) {
-			for (int j =0; j < imageBitmap.getWidth(); j++) {
-				int p = imageBitmap.getPixel(j,i);
+		for (int i = minCol; i < maxCol; i++) {
+			for (int j =minRow; j < maxRow; j++) {
+				int p = imageBitmap.getPixel(i,j);
 				int R = (p >> 16) & 0xff;
 				int G = (p >> 8) & 0xff;
 				int B = p & 0xff;
 				int sum = R+G+B;
 				if (sum > 250)
-					imageBitmap.setPixel(j, i, Color.WHITE);
+					imageBitmap.setPixel(i, j, Color.WHITE);
 				else if (sum > 100);
 				else {
-					imageBitmap.setPixel(j, i, Color.BLACK);
+					imageBitmap.setPixel(i, j, Color.BLACK);
 					colHasBlacks[j] = true;
 					rowHasBlacks[i] = true;
 					if(j>maxCol)
@@ -130,9 +126,99 @@ public class ImageProcessingActivity extends Activity {
 				}
 			}
 		}
+		imageView.setImageBitmap(imageBitmap);
 	}
 	
-	private void identify() {
+	private void identify(int x, int y) {
+		
+	    minRow = maxRow = y;
+	    minCol = maxCol = x;
+	    
+	    int maxWidth = imageBitmap.getWidth();
+	    int maxHeight = imageBitmap.getHeight();
+	    
+	    while( minRow > 0) {
+	    	boolean flag = false;
+	    	for(int i = Math.max(x -1000, 0); i< Math.min(x+1000, maxWidth); i++) {
+	    		int p = imageBitmap.getPixel(i,minRow);
+				int R = (p >> 16) & 0xff;
+				int G = (p >> 8) & 0xff;
+				int B = p & 0xff;
+				int sum = R+G+B;
+				if (sum < 250) {
+					minRow--;
+					flag = true;
+					break;
+				}
+	    	}
+			if(!flag)
+				break;
+	    }
+	    
+	    while( maxRow < maxHeight) {
+	    	boolean flag = false;
+	    	for(int i = Math.max(x -1000, 0); i< Math.min(x+1000, maxWidth); i++) {
+	    		int p = imageBitmap.getPixel(i,maxRow);
+				int R = (p >> 16) & 0xff;
+				int G = (p >> 8) & 0xff;
+				int B = p & 0xff;
+				int sum = R+G+B;
+				if (sum < 250) {
+					maxRow++;
+					flag = true;
+					break;
+				}
+	    	}
+			if(!flag)
+				break;
+	    	
+	    }
+	    
+	    while( minCol > 0) {
+	    	boolean flag = false;
+	    	for(int i = Math.max(y -1000, 0); i< Math.min(y+1000, maxWidth); i++) {
+	    		int p = imageBitmap.getPixel(minCol, i);
+				int R = (p >> 16) & 0xff;
+				int G = (p >> 8) & 0xff;
+				int B = p & 0xff;
+				int sum = R+G+B;
+				if (sum < 250) {
+					minCol--;
+					flag = true;
+					break;
+				}
+	    	}
+			if(!flag)
+				break;
+	    	
+	    }
+	    
+	    while( maxCol < maxWidth) {
+	    	boolean flag = false;
+	    	for(int i = Math.max(y -1000, 0); i< Math.min(y+1000, maxWidth); i++) {
+	    		int p = imageBitmap.getPixel(maxCol, i);
+				int R = (p >> 16) & 0xff;
+				int G = (p >> 8) & 0xff;
+				int B = p & 0xff;
+				int sum = R+G+B;
+				if (sum < 250) {
+					maxCol++;
+					flag = true;
+					break;
+				}
+	    	}
+			if(!flag)
+				break;
+	    	
+	    }
+	    for (int i = minRow ; i < maxRow; i++) {
+			for (int j = minCol ; j < maxCol; j++) {
+				imageBitmap.setPixel(j, i, Color.RED);
+			}
+		}
+	    imageView.setImageBitmap(imageBitmap);
+	    contrast();
+		/*
 		Toast.makeText(this, "in identify", Toast.LENGTH_SHORT)
         .show();
 		for(int i = minCol; i < maxCol; i++) {
@@ -153,7 +239,7 @@ public class ImageProcessingActivity extends Activity {
 			imageBitmap.setPixel(i, minCol-2, Color.GREEN);
 			imageBitmap.setPixel(i, minCol-3, Color.GREEN);
 			imageBitmap.setPixel(i, minCol-4, Color.GREEN);
-		}
+		}*/
 	}
 	
 	private void process() {
